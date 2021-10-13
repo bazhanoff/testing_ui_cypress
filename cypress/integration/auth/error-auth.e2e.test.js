@@ -12,7 +12,7 @@ context('Auth', () => {
             method: 'POST',
             url: '**/api/authentication',
             response: 'fixture:authentication/authentication-error.json',
-            status: 403,
+            status: status[1], //403
         }).as('auth-xhr')
 
         cy.findByPlaceholderText('Your username').type('smagni@workwave.com');
@@ -20,7 +20,7 @@ context('Auth', () => {
         cy.findByRole('button', { name: 'Login' }).click();
         
         // 2 Исправить тест
-        cy.findByText('An error occured, please retrydasdada').should('be.visible');
+        cy.findByText('An error occured, please retry').should('be.visible');
     })
 
 
@@ -29,6 +29,18 @@ context('Auth', () => {
         cy.server()
         cy.visit('/')
 
-        // 3 Дописать тесты
+        cy.route({
+            method: 'POST',
+            url: '**/api/authentication',
+            response: 'fixture:authentication/authentication-error.json',
+            status: status[0], //401
+        }).as('auth-xhr')
+
+        cy.findByPlaceholderText('Your username').type('smagni@workwave.com');
+        cy.findByPlaceholderText('Your password').type('mysupersecretpassword');
+        cy.findByRole('button', { name: 'Login' }).click();
+        
+        // проверка
+        cy.findByText('The credentials are wrong').should('be.visible');
     })
 })
