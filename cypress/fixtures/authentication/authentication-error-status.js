@@ -1,3 +1,3 @@
 module.exports = {
-    'status': [401, 403],
+    'status': [401, 403, 200],
 }
